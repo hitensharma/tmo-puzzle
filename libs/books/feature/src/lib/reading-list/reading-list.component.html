@@ -13,12 +13,31 @@
         {{ b.authors.join(',') }}
       </div>
     </div>
-    <div>
+
+    <div class="reading-list-item__buttons">
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="{{ !b.finished ? 'Mark Book as Finished' : '' }}"
+        [attr.aria-label]="'Finish ' + b.title + ' in reading list'"
+        (click)="finishBookFromReadingList(b)"
+        [disabled]="b.finished"
+        data-testing="finish-book"
+        *ngIf="!b.finishedDate"
+      >
+        <mat-icon>done</mat-icon>
+      </button>
+      <div class="finished" *ngIf="b.finishedDate">
+        <small class="finished-text">Finished</small>
+        <small class="finished-date">{{ b.finishedDate | date }}</small>
+      </div>
       <button
         mat-icon-button
         color="warn"
         [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
+        matTooltip="Remove book from Reading List"
         (click)="removeFromReadingList(b)"
+        data-testing="remove-book"
       >
         <mat-icon>remove_circle</mat-icon>
       </button>
