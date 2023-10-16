@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
-  clearSearch,
   getAllBooks,
   ReadingListBook,
   searchBooks,
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
+import { NotificationsService } from '../notifications.service';
 
 @Component({
   selector: 'tmo-book-search',
@@ -24,7 +24,8 @@ export class BookSearchComponent implements OnInit {
 
   constructor(
     private readonly store: Store,
-    private readonly fb: FormBuilder
+    private readonly fb: FormBuilder,
+    private notifications: NotificationsService
   ) {}
 
   get searchTerm(): string {
@@ -45,6 +46,8 @@ export class BookSearchComponent implements OnInit {
 
   addBookToReadingList(book: Book) {
     this.store.dispatch(addToReadingList({ book }));
+    // ? SHOW SNACKBAR WITH ADDED MESSAGE
+    this.notifications.showMessage(`Book Added - ${book.title}`, book);
   }
 
   searchExample() {
