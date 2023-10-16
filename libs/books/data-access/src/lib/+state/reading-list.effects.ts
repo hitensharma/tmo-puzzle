@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, concatMap, exhaustMap, map } from 'rxjs/operators';
-import { ReadingListItem } from '@tmo/shared/models';
+import { Book, ReadingListItem } from '@tmo/shared/models';
 import * as ReadingListActions from './reading-list.actions';
 
 @Injectable()
@@ -51,6 +51,31 @@ export class ReadingListEffects implements OnInitEffects {
           )
         )
       )
+    )
+  );
+
+  markFinished$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ReadingListActions.finishBookFromReadingList),
+      concatMap(({ book }) => {
+        const bookFinished: Book = {
+          ...book,
+          finished: true,
+          finishedDate: new Date().toISOString(),
+        };
+        return this.http
+          .put(`/api/reading-list/${book.id}/finished`, bookFinished)
+          .pipe(
+            map(() =>
+              ReadingListActions.confirmedFinishBookFromReadingList({
+                book: { ...bookFinished },
+              })
+            ),
+            catchError((error) =>
+              of(ReadingListActions.failedFinishBookFromReadingList({ error }))
+            )
+          );
+      })
     )
   );
 

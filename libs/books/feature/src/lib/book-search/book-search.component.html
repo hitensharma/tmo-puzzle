@@ -41,10 +41,21 @@
           <div>
             <button
               mat-flat-button
+              color="warn"
+              (click)="finishBookFromReadingList(b)"
+              [disabled]="b.finished"
+              aria-label="Finish"
+              *ngIf="b.isAdded"
+            >
+              Finish
+            </button>
+            <button
+              mat-flat-button
               color="primary"
               (click)="addBookToReadingList(b)"
               [disabled]="b.isAdded"
               aria-label="Want to Read"
+              *ngIf="!b.isAdded"
             >
               Want to Read
             </button>

@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
-  clearSearch,
+  finishBookFromReadingList,
   getAllBooks,
   ReadingListBook,
   searchBooks,
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
-import { Book } from '@tmo/shared/models';
+import { Book, ReadingListItem } from '@tmo/shared/models';
 
 @Component({
   selector: 'tmo-book-search',
@@ -17,6 +17,7 @@ import { Book } from '@tmo/shared/models';
 })
 export class BookSearchComponent implements OnInit {
   books: ReadingListBook[];
+  readingList: ReadingListItem[];
 
   searchForm = this.fb.group({
     term: '',
@@ -56,5 +57,9 @@ export class BookSearchComponent implements OnInit {
     if (this.searchForm.value.term) {
       this.store.dispatch(searchBooks({ term: this.searchTerm }));
     }
+  }
+
+  finishBookFromReadingList(book: Book) {
+    this.store.dispatch(finishBookFromReadingList({ book }));
   }
 }
